@@ -4,6 +4,8 @@
 #load required libraries
 library(data.table)
 library(Hmisc)
+library(extrafont)
+loadfonts()
 
 #read in data
 TpNS<- fread("C:/Users/Savvas Constantinou/Downloads/TpNS.csv", stringsAsFactors = F)
@@ -26,22 +28,23 @@ summary(linreg)
 adjr2<-format(summary(linreg)$r.squared, digits=3)
 adjr2
 
+#save as pdf, output will be in working directory
+pdf("TpNsJitterPlot.pdf", family="ArialMT")
+
 #plot the "jitter-ed"data, remove x axis so we can specify ticks later
-windowsFonts(Arial=windowsFont("Arial"))
-op <- par(family="Arial")
 plot(TpNS$jAge, TpNS$jEN, bty="n", pch='°', xlab="Age post hatching (hours)", 
-     ylab="Number of EN stripes", ylim=c(0,18), yaxt="n", xaxt="n", family="Arial")
+     ylab="Number of EN stripes", ylim=c(0,18), yaxt="n", xaxt="n")
 #add tick marks and axes
 ticks<-c(-1:18)
 ticksy<-seq(0, 18, 3)
-axis(1, at=ticks, labels=ticks, lwd=3, pos=0, cex.axis=0.75, family="Arial")
-axis(2, at=ticksy, labels=ticksy, lwd=3, pos=-0.8, cex.axis=0.75, family="Arial")
+axis(1, at=ticks, labels=ticks, lwd=3, pos=0, cex.axis=0.75)
+axis(2, at=ticksy, labels=ticksy, lwd=3, pos=-0.8, cex.axis=0.75)
+
 #add the linear regression line from the analysis, a line @4 hours to denote molt event, and 
 # a legend with R^2 value
 abline(linreg, lwd=2)
 abline(v=4, lty=2)
 legend("right", bty="n", legend=expression(paste("R" ^"2","=0.974")))
-#reset plotting parameters
-par(op)
 
-#export as pdf (SJC uses Rstudio, thus no commands here). pdf is a vector format and creates lines that are smooth and not pixelated
+#close plotting environment and send to pdf
+dev.off()
