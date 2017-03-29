@@ -32,7 +32,7 @@ adjr2
 pdf("TpNsJitterPlot.pdf", family="ArialMT")
 
 #plot the "jitter-ed"data, remove x axis so we can specify ticks later
-plot(TpNS$jAge, TpNS$jEN, bty="n", pch='°', xlab="Age post hatching (hours)", 
+plot(TpNS$jAge, TpNS$jEN, bty="n", pch='°', xlab="Age post-hatching (hours)", 
      ylab="Number of EN stripes", ylim=c(0,18), yaxt="n", xaxt="n")
 #add tick marks and axes
 ticks<-c(-1:18)
