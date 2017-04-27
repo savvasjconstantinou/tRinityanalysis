@@ -1,0 +1,377 @@
+#Tp analysis
+
+#install required packages
+install.packages("broom")
+#load required packages
+library(broom)
+
+#load in the dataset and check
+full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/full.csv", header=T, stringsAsFactors =T)
+head(full)
+str(full)
+
+#1 BL
+#check BL data against EN
+boxplot(BL~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+BLaov <-aov(full[,1]~as.factor(EN), data=full)
+BLaovT <- tidy(BLaov)
+if (BLaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyBL<-TukeyHSD(BLaov, conf.level = 0.95)
+TukeyBL<-tidy(TukeyBL)
+#print the comparisons that are significantly NOT different from each other
+TukeyBL[TukeyBL[,6]>0.05,c(2,6)]
+
+#check BL data against tagma
+boxplot(BL~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+BLaovTag <-aov(full[,1]~Tagma, data=full)
+BLaovTagT <- tidy(BLaovTag)
+if (BLaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyBLTag<-TukeyHSD(BLaovTag, conf.level = 0.95)
+TukeyBLTag<-tidy(TukeyBLTag)
+#print the comparisons that are significantly NOT different from each other, (if output=NULL than all diff)
+TukeyBLTag[TukeyBLTag[,6]>0.05,c(2,6)] 
+#______________
+#2 GZL
+
+#check GZL data against EN
+boxplot(GZ.L~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZLaov <-aov(full[,3]~as.factor(EN), data=full)
+GZLaovT <- tidy(GZLaov)
+if (GZLaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZL<-TukeyHSD(GZLaov, conf.level = 0.95)
+TukeyGZL<-tidy(TukeyGZL)
+#print the comparisons that are significantly NOT different from each other
+TukeyGZL[TukeyGZL[,6]>0.05,c(2,6)]
+
+#check GZL data against tagma
+boxplot(GZ.L~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZLaovTag <-aov(full[,3]~Tagma, data=full)
+GZLaovTagT <- tidy(GZLaovTag)
+if (GZLaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZLTag<-TukeyHSD(GZLaovTag, conf.level = 0.95)
+TukeyGZLTag<-tidy(TukeyGZLTag)
+#print the comparisons that are significantly NOT different from each other, (if output=NULL than all diff)
+TukeyGZLTag[TukeyGZLTag[,6]>0.05,c(2,6)] 
+
+#______________
+#3 GZL cell
+
+#check GZL cell data against EN
+boxplot(GZ.L.cells~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZLcaov <-aov(full[,4]~as.factor(EN), data=full)
+GZLcaovT <- tidy(GZLcaov)
+if (GZLcaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZLc<-TukeyHSD(GZLcaov, conf.level = 0.95)
+TukeyGZLc<-tidy(TukeyGZLc)
+#print the comparisons that are significantly NOT different from each other
+TukeyGZLc[TukeyGZLc[,6]>0.05,c(2,6)]
+
+#check GZL cell data against tagma
+boxplot(GZ.L.cells~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. If significant, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZLcaovTag <-aov(full[,4]~Tagma, data=full)
+GZLcaovTagT <- tidy(GZLcaovTag)
+if (GZLcaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZLcTag<-TukeyHSD(GZLcaovTag, conf.level = 0.95)
+TukeyGZLcTag<-tidy(TukeyGZLcTag)
+#print the comparisons that are significantly NOT different from each other, (if output=NULL than all diff)
+TukeyGZLcTag[TukeyGZLcTag[,6]>0.05,c(2,6)] 
+
+#______________
+#4 GZWA=width of newly added en stripe
+
+#check GZWA data against EN
+boxplot(GZ.WA~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZWAaov <-aov(full[,5]~as.factor(EN), data=full)
+GZWAaovT <- tidy(GZWAaov)
+if (GZWAaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZWA<-TukeyHSD(GZWAaov, conf.level = 0.95)
+TukeyGZWA<-tidy(TukeyGZWA)
+#print the comparisons that are significantly different from each other
+TukeyGZWA[TukeyGZWA[,6]<0.05,c(2,6)]
+
+#check GZWA data against tagma
+boxplot(GZ.WA~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+GZWAaovTag <-aov(full[,5]~Tagma, data=full)
+GZWAaovTagT <- tidy(GZWAaovTag)
+#see if F-test is significant
+if (GZWAaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZWATag<-TukeyHSD(GZWAaovTag, conf.level = 0.95)
+TukeyGZWATag<-tidy(TukeyGZWATag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyGZWATag[TukeyGZWATag[,6]>0.05,c(2,6)] 
+
+#______________
+#5 GZ A
+
+#check GZ A data against EN
+boxplot(GZ.A~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+GZAaov <-aov(full[,9]~as.factor(EN), data=full)
+GZAaovT <- tidy(GZAaov)
+if (GZAaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZA<-TukeyHSD(GZAaov, conf.level = 0.95)
+TukeyGZA<-tidy(TukeyGZA)
+#print the comparisons that are not significantly different from each other
+TukeyGZA[TukeyGZA[,6]>0.05,c(2,6)]
+
+#check GZ A cell data against tagma
+boxplot(GZ.A~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+GZAaovTag <-aov(full[,9]~Tagma, data=full)
+GZAaovTagT <- tidy(GZAaovTag)
+#see if F-test is significant
+if (GZAaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyGZATag<-TukeyHSD(GZAaovTag, conf.level = 0.95)
+TukeyGZATag<-tidy(TukeyGZATag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyGZATag[TukeyGZATag[,6]>0.05,c(2,6)] 
+
+#______________
+#6 Last seg L
+
+#check Last seg L data against EN
+boxplot(Last.Seg.L~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+LSLaov <-aov(full[,10]~as.factor(EN), data=full)
+LSLaovT <- tidy(LSLaov)
+if (LSLaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSL<-TukeyHSD(LSLaov, conf.level = 0.95)
+TukeyLSL<-tidy(TukeyLSL)
+#print the comparisons that are not significantly different from each other
+TukeyLSL[TukeyLSL[,6]>0.05,c(2,6)]
+
+#check Last seg L data against tagma
+boxplot(Last.Seg.L~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+LSLaovTag <-aov(full[,10]~Tagma, data=full)
+LSLaovTagT <- tidy(LSLaovTag)
+#see if F-test is significant
+if (LSLaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSLTag<-TukeyHSD(LSLaovTag, conf.level = 0.95)
+TukeyLSLTag<-tidy(TukeyLSLTag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyLSLTag[TukeyLSLTag[,6]>0.05,c(2,6)] 
+
+#______________
+#7 Last seg L cells
+
+#check Last seg L cell data against EN
+boxplot(Last.Seg.L.cells~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+LSLcaov <-aov(full[,11]~as.factor(EN), data=full)
+LSLcaovT <- tidy(LSLcaov)
+if (LSLcaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSLc<-TukeyHSD(LSLcaov, conf.level = 0.95)
+TukeyLSLc<-tidy(TukeyLSLc)
+#print the comparisons that are not significantly different from each other
+TukeyLSLc[TukeyLSLc[,6]>0.05,c(2,6)]
+
+#check Last seg L cell data against tagma
+boxplot(Last.Seg.L.cells~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+LSLcaovTag <-aov(full[,11]~Tagma, data=full)
+LSLcaovTagT <- tidy(LSLcaovTag)
+#see if F-test is significant
+if (LSLcaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSLcTag<-TukeyHSD(LSLcaovTag, conf.level = 0.95)
+TukeyLSLcTag<-tidy(TukeyLSLcTag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyLSLcTag[TukeyLSLcTag[,6]>0.05,c(2,6)] 
+
+#______________
+#8 Last seg A
+
+#check Last seg A data against EN
+boxplot(Last.Seg.A~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+LSAaov <-aov(full[,12]~as.factor(EN), data=full)
+LSAaovT <- tidy(LSAaov)
+if (LSAaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSA<-TukeyHSD(LSAaov, conf.level = 0.95)
+TukeyLSA<-tidy(TukeyLSA)
+#print the comparisons that are not significantly different from each other
+TukeyLSA[TukeyLSA[,6]>0.05,c(2,6)]
+
+#check Last seg A data against tagma
+boxplot(Last.Seg.A~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+LSAaovTag <-aov(full[,12]~Tagma, data=full)
+LSAaovTagT <- tidy(LSAaovTag)
+#see if F-test is significant
+if (LSAaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyLSATag<-TukeyHSD(LSAaovTag, conf.level = 0.95)
+TukeyLSATag<-tidy(TukeyLSATag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyLSATag[TukeyLSATag[,6]>0.05,c(2,6)] 
+
+#______________
+#9 Trunk A
+
+#check Trunk A data against EN
+boxplot(Trunk.A~as.factor(EN), data=full)
+
+#fit ANOVA model, print the p-value for F-test. If <0.05, than reject null 
+#(that all groups have equal means) accept H1 where the means are not equal
+TAaov <-aov(full[,13]~as.factor(EN), data=full)
+TAaovT <- tidy(TAaov)
+if (TAaovT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyTA<-TukeyHSD(TAaov, conf.level = 0.95)
+TukeyTA<-tidy(TukeyTA)
+#print the comparisons that are not significantly different from each other
+TukeyTA[TukeyTA[,6]>0.05,c(2,6)]
+
+#check Trunk A data against tagma
+boxplot(Trunk.A~Tagma, data=full)
+
+#fit ANOVA model, print the p-value for F-test. 
+TAaovTag <-aov(full[,13]~Tagma, data=full)
+TAaovTagT <- tidy(TAaovTag)
+#see if F-test is significant
+if (TAaovTagT$p.value[1]>0.05){
+  print("the means are not different from each other; they are equal")
+}else{
+  print("the means are different from each other; they are not equal")
+}
+
+#run multiple comparisons using tukey HSD with conf of 95%
+TukeyTATag<-TukeyHSD(TAaovTag, conf.level = 0.95)
+TukeyTATag<-tidy(TukeyTATag)
+#print the comparisons that are significantly the same (NOT different from each other), (if output=NULL than all diff)
+TukeyTATag[TukeyTATag[,6]>0.05,c(2,6)] 
