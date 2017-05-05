@@ -38,7 +38,8 @@ g <- ggbiplot(myPCAnoENnoTag, obs.scale=1, var.scale=1, groups=group,
 gg <- ggbiplot(myPCAnoTag, obs.scale=1, var.scale=1, groups=group, 
               ellipse=TRUE, circle=TRUE) +
     ggtitle("include EN") +
-  scale_color_discrete(name='') 
+  scale_color_discrete(name='') +
+  theme(legend.position= c(.85,.8))
 grid.arrange(g,gg, ncol=1)
 
 #look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
