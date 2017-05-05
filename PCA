@@ -39,7 +39,7 @@ g <- ggbiplot(myPCAnoENnoTag, obs.scale=1, var.scale=1, groups=group,
 gg <- ggbiplot(myPCAnoTag, obs.scale=1, var.scale=1, groups=group, 
                ellipse=TRUE, circle=TRUE) +
   scale_color_discrete(name='')  +
-  theme(legend.position= c(.85,.85))
+  theme(legend.position= c(.85,.29)
 gg
 grid.arrange(g,gg, ncol=1)
 
