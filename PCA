@@ -16,8 +16,8 @@ head(notfull)
 str(notfull)
 
 #remove rows where NA are present 
-thing<-na.omit(notfull[,2:14])
-athing<-na.omit(notfull[,1:14])
+thing<-na.omit(notfull[,2:13])
+athing<-na.omit(notfull[,1:13])
 
 #do PCA, scale and center data. check contribution of each principal component. Enter all data except tagma and en, and another analysis including en
 myPCAnoENnoTag<-prcomp((thing), scale=TRUE, center=TRUE)
@@ -26,20 +26,21 @@ myPCAnoTag<-prcomp((athing), scale=TRUE, center=TRUE)
 summary(myPCAnoTag)
 
 #create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset)
-tagmanaout<- notfull[ c(1:30, 32:40, 42:53, 55:90, 92:309, 311:395, 397:428), 15]
+tagmanaout<- notfull[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 15]
 
 #plot PC1 and PC2, color data by tagma. include probability ellipse of 68%
 
 group<-as.factor(tagmanaout)
 g <- ggbiplot(myPCAnoENnoTag, obs.scale=1, var.scale=1, groups=group, 
               ellipse=TRUE, circle=TRUE) +
-    scale_color_discrete(name='') +
-  ggtitle("no EN no tag")
+      scale_color_discrete(name='')
+  g
+
 gg <- ggbiplot(myPCAnoTag, obs.scale=1, var.scale=1, groups=group, 
-              ellipse=TRUE, circle=TRUE) +
-    ggtitle("include EN") +
-  scale_color_discrete(name='') +
-  theme(legend.position= c(.85,.8))
+               ellipse=TRUE, circle=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.85))
+gg
 grid.arrange(g,gg, ncol=1)
 
 #look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
@@ -60,6 +61,6 @@ summary( lm( myPCAnoENnoTag$x[,2] ~ group) )
 summary( lm( myPCAnoTag$x[,1] ~ group) )
 summary( lm( myPCAnoTag$x[,2] ~ group) )
 
-#summary- best to include EN in analysis. If so, PC1 explains 60% of the variance of all the data AND ~78% of the variance in PC1 is explained 
+#summary- best to include EN in analysis. If so, PC1 explains 62% of the variance of all the data AND ~79% of the variance in PC1 is explained 
 #by group. By PC1, each tagma is different from each other statistically.
 #These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
