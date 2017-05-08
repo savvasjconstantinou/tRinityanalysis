@@ -19,7 +19,7 @@ str(notfull)
 thing<-na.omit(notfull[,2:13])
 athing<-na.omit(notfull[,1:13])
 
-#do PCA, scale and center data. check contribution of each principal component. Enter all data except tagma and en, and another analysis including en
+#do PCA, scale and center data. check contribution of each principal component. Enter all data except tagma, DAPI and en, and another analysis including en
 myPCAnoENnoTag<-prcomp((thing), scale=TRUE, center=TRUE)
 summary(myPCAnoENnoTag)
 myPCAnoTag<-prcomp((athing), scale=TRUE, center=TRUE)
@@ -62,5 +62,5 @@ summary( lm( myPCAnoTag$x[,1] ~ group) )
 summary( lm( myPCAnoTag$x[,2] ~ group) )
 
 #summary- best to include EN in analysis. If so, PC1 explains 62% of the variance of all the data AND ~79% of the variance in PC1 is explained 
-#by group. By PC1, each tagma is different from each other statistically.
+#by group (adj R2 sqrd from line 61). By PC1, each tagma is different from each other statistically.
 #These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
