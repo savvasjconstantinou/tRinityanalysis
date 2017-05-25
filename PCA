@@ -68,7 +68,7 @@ group<-as.factor(naout)
 gg <- ggbiplot(myPCA, obs.scale=1, var.scale=1, groups=group, 
                ellipse=TRUE) +
   scale_color_discrete(name='')  +
-  theme(legend.position= c(.85,.29)) 
+  theme(legend.position= c(.85,.89)) 
 gg
 
 
