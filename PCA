@@ -35,7 +35,7 @@ boxplot(as.numeric(data[,13])~as.factor(data[,2]))
 #10 en, GZWA, 112 change to 0.112
 #14 en, LSA, 138 change to 0.00138
 
-#make copies or original data in new folder, make changes,remerge into data called "full", export data
+#make copies of original data in new folder, make changes,remerge into data called "full", export data
 setwd("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2")
 filename <- list.files(path="C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2")
 colnames<-c("BL","EN","GZ.L","GZ.L.cells","GZWA","GZWA.cells","GZWB","GZWB.cells","GZA","LSL","LSL.cells","LSA","TrunkA","GZDAPI","# mit AP","% mit AP","GZpH3")
