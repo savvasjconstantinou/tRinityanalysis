@@ -1,66 +1,56 @@
-#install and load required packages
+#install and load required packages- thank you to the package developers!
 install.packages("graphics")
-install.packages("car")
 install.packages("devtools")
-install.packages("gridExtra")
+install.packages("cowplot")
+
 library(graphics)
 library(devtools)
 install_github("ggbiplot", "vqv")
 library(ggbiplot)
-library(car)
-library(gridExtra)
+library(cowplot)
 
-#load in and check data
-notfull<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/notfull.csv", header=T, stringsAsFactors =T)
-head(notfull)
-str(notfull)
 
-#remove rows where NA are present 
-thing<-na.omit(notfull[,2:13])
-athing<-na.omit(notfull[,1:13])
+#load in and check data, add 1 cell to LSL cell number (to include en expressing cell of segment)
+full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/full.csv", header=T, stringsAsFactors =T)
+full$Last.Seg.L.cells<- full$Last.Seg.L.cells + 1
+head(full)
+str(full)
 
-#do PCA, scale and center data. check contribution of each principal component. Enter all data except tagma, DAPI and en, and another analysis including en
-myPCAnoENnoTag<-prcomp((thing), scale=TRUE, center=TRUE)
-summary(myPCAnoENnoTag)
-myPCAnoTag<-prcomp((athing), scale=TRUE, center=TRUE)
-summary(myPCAnoTag)
+#remove rows where NA are present, exclude dapi, AP oriented and %, pH3 and tagma
+
+athing<-na.omit(full[,1:13])
+
+#do PCA, scale and center data. check contribution of each principal component.
+
+myPCA<-prcomp((athing), scale=TRUE, center=TRUE)
+summary(myPCA)
 
 #create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset)
-tagmanaout<- notfull[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 15]
+naout<- full[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 18]
 
 #plot PC1 and PC2, color data by tagma. include probability ellipse of 68%
 
-group<-as.factor(tagmanaout)
-g <- ggbiplot(myPCAnoENnoTag, obs.scale=1, var.scale=1, groups=group, 
-              ellipse=TRUE, circle=TRUE) +
-      scale_color_discrete(name='')
-  g
+group<-as.factor(naout)
 
-gg <- ggbiplot(myPCAnoTag, obs.scale=1, var.scale=1, groups=group, 
-               ellipse=TRUE, circle=TRUE) +
+gg <- ggbiplot(myPCA, obs.scale=1, var.scale=1, groups=group, 
+               ellipse=TRUE) +
   scale_color_discrete(name='')  +
-  theme(legend.position= c(.85,.29))
+  theme(legend.position= c(.85,.29)) 
 gg
-grid.arrange(g,gg, ncol=1)
+
 
 #look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
 #as necessary to explain 80-90% of variance- use summary of myPCA...)
-screeplot(myPCAnoENnoTag)
-screeplot(myPCAnoTag)
+screeplot(myPCA)
 
-#multiple comparisons of PC1, PC2, and PC3 (to explain >80% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
-a<-manova((myPCAnoENnoTag$x[,1:3])~group)
-car::Anova( a )
-b<-manova((myPCAnoTag$x[,1:3])~group)
-car::Anova( b )
+#multiple comparisons of PC1, PC2, PC3, and PC4 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+a<-manova((myPCA$x[,1:4])~group)
+summary(a)
 
 #how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
-summary( lm( myPCAnoENnoTag$x[,1] ~ group) )
-summary( lm( myPCAnoENnoTag$x[,2] ~ group) )
+summary( lm( myPCA$x[,1] ~ group) )
+summary( lm( myPCA$x[,2] ~ group) )
 
-summary( lm( myPCAnoTag$x[,1] ~ group) )
-summary( lm( myPCAnoTag$x[,2] ~ group) )
-
-#summary- best to include EN in analysis. If so, PC1 explains 62% of the variance of all the data AND ~79% of the variance in PC1 is explained 
-#by group (adj R2 sqrd from line 61). By PC1, each tagma is different from each other statistically.
+#summary- best to include EN in analysis. If so, PC1 explains ~62% of the variance of all the data AND ~79% of the variance in PC1 is explained 
+#by group (adj R2 sqrd from line 51). By PC1, each tagma is different from each other statistically.
 #These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
