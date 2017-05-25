@@ -10,19 +10,52 @@ library(ggbiplot)
 library(cowplot)
 
 
-#load in and check data, add 1 cell to LSL cell number (to include en expressing cell of segment)
-full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/full.csv", header=T, stringsAsFactors =T)
-full$Last.Seg.L.cells<- full$Last.Seg.L.cells + 1
+#create file for TP analysis
+
+#merge all data, change col names to be more readable, check
+setwd("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full")
+filenames <- list.files(path="C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full")
+colnames<-c("BL","EN","GZ.L","GZ.L.cells","GZWA","GZWA.cells","GZWB","GZWB.cells","GZA","LSL","LSL.cells","LSA","TrunkA","GZDAPI","# mit AP","% mit AP","GZpH3")
+data<-do.call(rbind, lapply(filenames, function(x) read.csv(x, col.names = colnames, stringsAsFactors = T)))
+head(data)
+
+#identify extreme outliers in columns 1-13 without EN or cell length
+boxplot(data[,1]~as.factor(data[,2]))
+boxplot(data[,3]~as.factor(data[,2]))
+boxplot(data[,5]~as.factor(data[,2]))
+boxplot(data[,7]~as.factor(data[,2]))
+boxplot(as.numeric(data[,9])~as.factor(data[,2]))
+boxplot(data[,10]~as.factor(data[,2]))
+boxplot(as.numeric(data[,12])~as.factor(data[,2]))
+boxplot(as.numeric(data[,13])~as.factor(data[,2]))
+
+#identified 4 misentered values from raw data:
+#5 en, BL 0.401 change to 0.41
+#5 en, BL, 0.0433 change to 0.433
+#10 en, GZWA, 112 change to 0.112
+#14 en, LSA, 138 change to 0.00138
+
+#make copies or original data in new folder, make changes,remerge into data called "full", export data
+setwd("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2")
+filename <- list.files(path="C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2")
+colnames<-c("BL","EN","GZ.L","GZ.L.cells","GZWA","GZWA.cells","GZWB","GZWB.cells","GZA","LSL","LSL.cells","LSA","TrunkA","GZDAPI","# mit AP","% mit AP","GZpH3")
+full<-do.call(rbind, lapply(filename, function(x) read.csv(x, col.names = colnames)))
+write.csv(full, file="full.csv")
+
+#add tagma groupings (see methods for categories), remove column 1 (duplicate of row names), remove "*" on data
+full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2/full.csv", header=T, stringsAsFactors =F)
+
+#add +1 to LSL cells (to account for en expressing cell of segment), check data
+full$LSL.cells<- as.numeric(full$LSL.cells) + 1
 head(full)
 str(full)
 
 #remove rows where NA are present, exclude dapi, AP oriented and %, pH3 and tagma
-
 athing<-na.omit(full[,1:13])
+str(athing)
 
 #do PCA, scale and center data. check contribution of each principal component.
-
-myPCA<-prcomp((athing), scale=TRUE, center=TRUE)
+myPCA<-prcomp(athing, scale=TRUE, center=TRUE)
 summary(myPCA)
 
 #create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset)
@@ -51,6 +84,6 @@ summary(a)
 summary( lm( myPCA$x[,1] ~ group) )
 summary( lm( myPCA$x[,2] ~ group) )
 
-#summary- best to include EN in analysis. If so, PC1 explains ~62% of the variance of all the data AND ~79% of the variance in PC1 is explained 
-#by group (adj R2 sqrd from line 51). By PC1, each tagma is different from each other statistically.
+#summary- best to include EN in analysis. If so, PC1 explains ~62% (line 59) of the variance of all the data AND ~79% of the variance in PC1 is explained 
+#by group (adj R2 sqrd from line 84). By PC1, each tagma is different from each other statistically.
 #These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
