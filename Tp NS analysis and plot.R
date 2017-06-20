@@ -8,7 +8,7 @@ library(extrafont)
 loadfonts()
 
 #read in data
-TpNS<- fread("C:/Users/Savvas Constantinou/Downloads/TpNS.csv", stringsAsFactors = F)
+TpNS<- fread("C:/Users/Savvas Constantinou/Downloads/Downloads/TpNS.csv", stringsAsFactors = F)
 
 #check data to make sure it has correct no. columns and rows and they are both integers
 str(TpNS)
@@ -40,10 +40,13 @@ ticksy<-seq(0, 18, 3)
 axis(1, at=ticks, labels=ticks, lwd=3, pos=0, cex.axis=0.75)
 axis(2, at=ticksy, labels=ticksy, lwd=3, pos=-0.8, cex.axis=0.75)
 
-#add the linear regression line from the analysis, a line @4 hours to denote molt event, and 
-# a legend with R^2 value
+#add the linear regression line from the analysis, a line @4 hours to denote molt event, 
+# a line @ 13 hours to indicate the T/G transition and a line @ 15 hours to indicate G/A
+#transition, and a legend with R^2 value
 abline(linreg, lwd=2)
 abline(v=4, lty=2)
+abline(v=13, lty=1)
+abline(v=15, lty=1)
 legend("right", bty="n", legend=expression(paste("R" ^"2","=0.974")))
 
 #close plotting environment and send to pdf
