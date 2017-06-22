@@ -47,7 +47,7 @@ abline(linreg, lwd=2)
 abline(v=4, lty=2)
 abline(v=12.3, lty=1)
 abline(v=15.2, lty=1)
-legend("right", bty="n", legend=expression(paste("R" ^"2","=0.974")))
+legend("top", bty="n", legend=expression(paste("R" ^"2","=0.974")))
 
 #close plotting environment and send to pdf
 dev.off()
