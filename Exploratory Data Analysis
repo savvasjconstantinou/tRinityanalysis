@@ -1,23 +1,12 @@
-#we wanted to see what the effects were of the 3 en group as their measures seem visually different from most other time points. Do the 3 en
-#animals 'pull' the pre-molt thoracic group to be different from the post-molt thoracic group (remove 3 en). Are they different enough to
-#be considered their own "tagma group"?
-#analysis is replicate of analysis to produce PCA from publication, with 2 additional data analysis done following it
+#exploratory PCA anaylsis
+#Does PC1 or PC2 still separate by tagma when you remove the cell measures?
 
-#install and load required packages- thank you to the package developers!
-install.packages("graphics")
 install.packages("devtools")
-install.packages("cowplot")
-install.packages("gridExtra")
-
-library(graphics)
 library(devtools)
 install_github("ggbiplot", "vqv")
 library(ggbiplot)
-library(cowplot)
-library(gridExtra)
 
-#create file for TP analysis
-
+#This is code from the OG PCA to make the full data set
 #merge all data, change col names to be more readable, check
 setwd("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full")
 filenames <- list.files(path="C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full")
@@ -55,16 +44,197 @@ full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/
 full$LSL.cells<- as.numeric(full$LSL.cells) + 1
 head(full)
 str(full)
+#________________________________________
 
-#remove rows where NA are present, exclude dapi, AP oriented and %, pH3 and tagma
+
+#________________________________________
+#remove rows where NA are present, exclude dapi, AP oriented and %, pH3, tagma and all length measures that have cell counts
+nolengths<-na.omit(full[,c(1,2,4,6,8,9,11,12,13)])
+str(nolengths)
+
+#do PCA, scale and center data. check contribution of each principal component.
+myPCAnolengths<-prcomp(nolengths, scale=TRUE, center=TRUE)
+summary(myPCAnolengths)
+#how important is each component to the PC (absolute value)
+myPCAnolengths$rotation
+
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset) and identifies tagma
+naoutnolengths<- full[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 18]
+
+group<-as.factor(naoutnolengths)
+
+ggnolengths <- ggbiplot(myPCAnolengths, obs.scale=1, var.scale=1, groups=group, 
+                     ellipse=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.89)) 
+ggnolengths
+
+#look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
+#as necessary to explain 80-90% of variance- use summary of myPCA...)
+screeplot(myPCAnolengths)
+
+#multiple comparisons of PC1, PC2, PC3, and PC4 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+nolengtha<-manova((myPCAnolengths$x[,1:4])~group)
+summary(nolengtha)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCAnolengths$x[,1] ~ group) )
+summary( lm( myPCAnolengths$x[,2] ~ group) )
+
+#PC1 explains 65.4% of the variance in dataset, and 0.738 adj r 2 for tagma separation (all sig different)
+
+#_____________________________________________________
+#separate last seg and GZ measures, exclude cell counts
+#1a+b. Include BL, EN and trunk A for both 
+#2a+b. Include EN for both
+
+#1a
+#remove rows where NA are present, exclude dapi, AP oriented and %, pH3, tagma and all cell counts
+PCA1a<-na.omit(full[,c(1:3,5,7,9,13)])
+str(PCA1a)
+
+#do PCA, scale and center data. check contribution of each principal component.
+myPCA1a<-prcomp(PCA1a, scale=TRUE, center=TRUE)
+summary(myPCA1a)
+#how important is each component to the PC (absolute value)
+myPCA1a$rotation
+
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset) and identifies tagma
+naoutPCA1a<- full[ , 18]
+
+group<-as.factor(naoutPCA1a)
+
+ggPCA1a <- ggbiplot(myPCA1a, obs.scale=1, var.scale=1, groups=group, 
+                    ellipse=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.89)) 
+ggPCA1a
+
+#multiple comparisons of PC1, PC2,  (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+PCA1aa<-manova((myPCA1a$x[,1:2])~group)
+summary(PCA1aa)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCA1a$x[,1] ~ group) )
+summary( lm( myPCA1a$x[,2] ~ group) )
+
+#PC1 explains 67.7% of the variance in dataset, separates by tagma (all sig diff) adj R2= 0.8082
+#______________________________
+
+#1b- last seg PCA with 3 other measures and only lengths
+
+#remove rows where NA are present, included wanted items
+PCA1b<-na.omit(full[,c(1,2,10,12,13)])
+str(PCA1b)
+
+#do PCA, scale and center data. check contribution of each principal component.
+myPCA1b<-prcomp(PCA1b, scale=TRUE, center=TRUE)
+summary(myPCA1b)
+#how important is each component to the PC (absolute value)
+myPCA1b$rotation
+
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset) and identifies tagma
+naoutPCA1b<- full[ , 18]
+
+group<-as.factor(naoutPCA1b)
+
+ggPCA1b <- ggbiplot(myPCA1b, obs.scale=1, var.scale=1, groups=group, 
+                    ellipse=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.89)) 
+ggPCA1b
+
+#multiple comparisons of PC1, PC2,  (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+PCA1ba<-manova((myPCA1b$x[,1:2])~group)
+summary(PCA1ba)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCA1b$x[,1] ~ group) )
+summary( lm( myPCA1b$x[,2] ~ group) )
+
+#PC1 explains 82.4% of the variance in dataset, separates by tagma (all sig different) adj R2= 0.7665
+#______________________________
+
+#2a- GZ PCA with only lengths and en
+
+#remove rows where NA are present, included wanted items
+PCA2a<-na.omit(full[,c(2,3, 5, 7, 9)])
+str(PCA2a)
+
+#do PCA, scale and center data. check contribution of each principal component.
+myPCA2a<-prcomp(PCA2a, scale=TRUE, center=TRUE)
+summary(myPCA2a)
+#how important is each component to the PC (absolute value)
+myPCA2a$rotation
+
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset) and identifies tagma
+naoutPCA2a<- full[ , 18]
+
+group<-as.factor(naoutPCA2a)
+
+ggPCA2a <- ggbiplot(myPCA2a, obs.scale=1, var.scale=1, groups=group, 
+                    ellipse=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.89)) 
+ggPCA2a
+
+#multiple comparisons of PC1, PC2,  (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+PCA2aa<-manova((myPCA2a$x[,1:2])~group)
+summary(PCA2aa)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCA2a$x[,1] ~ group) )
+summary( lm( myPCA2a$x[,2] ~ group) )
+
+#PC1 explains 62.9% of the variance in dataset, separates by tagma (all sig different) adj R2= 0.674
+#______________________________
+
+#2b- last seg PCA only lengths and only en
+
+#remove rows where NA are present, included wanted items
+PCA2b<-na.omit(full[,c(2,10,12)])
+str(PCA2b)
+
+#do PCA, scale and center data. check contribution of each principal component.
+myPCA2b<-prcomp(PCA2b, scale=TRUE, center=TRUE)
+summary(myPCA2b)
+#how important is each component to the PC (absolute value)
+myPCA2b$rotation
+
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset) and identifies tagma
+naoutPCA2b<- full[ , 18]
+
+group<-as.factor(naoutPCA2b)
+
+ggPCA2b <- ggbiplot(myPCA2b, obs.scale=1, var.scale=1, groups=group, 
+                    ellipse=TRUE) +
+  scale_color_discrete(name='')  +
+  theme(legend.position= c(.85,.89)) 
+ggPCA2b
+
+#multiple comparisons of PC1, PC2,  (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+PCA2ba<-manova((myPCA2b$x[,1:2])~group)
+summary(PCA2ba)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCA2b$x[,1] ~ group) )
+summary( lm( myPCA2b$x[,2] ~ group) )
+
+#PC1 explains 85.3% of the variance in dataset, separates by tagma (all sig different) adj R2= 0.5903
+
+
+#_______________________________________________________________________
+#remove rows where NA are present, exclude dapi, AP oriented and %, pH3 and tagma. 
 athing<-na.omit(full[,1:13])
 str(athing)
 
 #do PCA, scale and center data. check contribution of each principal component.
 myPCA<-prcomp(athing, scale=TRUE, center=TRUE)
 summary(myPCA)
+#how important is each component to the PC (absolute value)
+myPCA$rotation
 
-#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset)
+#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'full' dataset) and identifies tagma
 naout<- full[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 18]
 
 #plot PC1 and PC2, color data by tagma. include probability ellipse of 68%
@@ -91,8 +261,9 @@ summary( lm( myPCA$x[,1] ~ group) )
 summary( lm( myPCA$x[,2] ~ group) )
 
 #summary- best to include EN in analysis. If so, PC1 explains ~62% (line 59) of the variance of all the data AND ~79% of the variance in PC1 is explained 
-#by group (adj R2 sqrd from line 84). By PC1, each tagma is different from each other statistically.
+#by tagma (adj R2 sqrd)- also can interpret it as sig diff tagma groups with adj R2 of 0.79). By PC1, each tagma is different from each other statistically.
 #These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
+#______________________________________________________________________________
 
 #check to see what happens to PCA if 3 en is removed
 a<-subset.data.frame(full, full$EN>3)
@@ -110,7 +281,7 @@ naoutaa<- full[ c(1:30, 32:40, 42:53, 55:90, 92:216, 241:395, 397:428), 18]
 groupa<-as.factor(naoutaa)
 
 gga <- ggbiplot(myPCAa, obs.scale=1, var.scale=1, groups=groupa, 
-               ellipse=TRUE) +
+                ellipse=TRUE) +
   scale_color_discrete(name='')  +
   theme(legend.position= c(.85,.89)) 
 gga
@@ -135,7 +306,7 @@ naoutb<- full3en[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 18]
 groupb<-as.factor(naoutb)
 
 ggb <- ggbiplot(myPCAb, obs.scale=1, var.scale=1, groups=groupb, 
-               ellipse=TRUE) +
+                ellipse=TRUE) +
   scale_color_discrete(name='')  +
   theme(legend.position= c(.85,.89)) 
 ggb
