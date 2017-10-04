@@ -2,13 +2,14 @@
 install.packages("graphics")
 install.packages("devtools")
 install.packages("cowplot")
+install.packages("gridExtra")
 
 library(graphics)
 library(devtools)
 install_github("ggbiplot", "vqv")
 library(ggbiplot)
 library(cowplot)
-
+library(gridExtra)
 
 #create file for TP analysis
 
@@ -50,40 +51,45 @@ full$LSL.cells<- as.numeric(full$LSL.cells) + 1
 head(full)
 str(full)
 
-#remove rows where NA are present, exclude dapi, AP oriented and %, pH3 and tagma
-athing<-na.omit(full[,1:13])
-str(athing)
+#how correlated are the cell count and lengths?
+cor(full[,3], full[,4], use="complete.obs")
+cor(full[,5], full[,6], use="complete.obs")
+cor(full[,7], full[,8], use="complete.obs")
+cor(full[,10], full[,11], use="complete.obs")
+
+#remove rows where NA are present, exclude dapi, AP oriented and %, pH3, tagma and all cell counts (b/c of high correlation)
+nocells<-na.omit(full[,c(1:3,5,7,9,10,12,13)])
+str(nocells)
 
 #do PCA, scale and center data. check contribution of each principal component.
-myPCA<-prcomp(athing, scale=TRUE, center=TRUE)
-summary(myPCA)
+myPCAnocell<-prcomp(nocells, scale=TRUE, center=TRUE)
+summary(myPCAnocell)
+#how important is each component to the PC (absolute value)
+myPCAnocell$rotation
 
-#create a vector of the group names that excludes the rows with NAs (identified visually by comparing 'thing/athing' to 'notfull' dataset)
-naout<- full[ c(1:30, 32:40, 42:53, 55:90, 92:395, 397:428), 18]
+#create a vector of the group names
+naoutnocell<- full[ , 18]
 
-#plot PC1 and PC2, color data by tagma. include probability ellipse of 68%
+group<-as.factor(naoutnocell)
 
-group<-as.factor(naout)
-
-gg <- ggbiplot(myPCA, obs.scale=1, var.scale=1, groups=group, 
-               ellipse=TRUE) +
+ggnocell <- ggbiplot(myPCAnocell, obs.scale=1, var.scale=1, groups=group, 
+                     ellipse=TRUE) +
   scale_color_discrete(name='')  +
   theme(legend.position= c(.85,.89)) 
-gg
-
+ggnocell
 
 #look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
 #as necessary to explain 80-90% of variance- use summary of myPCA...)
-screeplot(myPCA)
+screeplot(myPCAnocell)
 
 #multiple comparisons of PC1, PC2, PC3, and PC4 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
-a<-manova((myPCA$x[,1:4])~group)
-summary(a)
+nocella<-manova((myPCAnocell$x[,1:3])~group)
+summary(nocella)
 
 #how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
-summary( lm( myPCA$x[,1] ~ group) )
-summary( lm( myPCA$x[,2] ~ group) )
+summary( lm( myPCAnocell$x[,1] ~ group) )
+summary( lm( myPCAnocell$x[,2] ~ group) )
 
-#summary- best to include EN in analysis. If so, PC1 explains ~62% (line 59) of the variance of all the data AND ~79% of the variance in PC1 is explained 
-#by group (adj R2 sqrd from line 84). By PC1, each tagma is different from each other statistically.
-#These analysis statistically justify the separation of tagma that we chose based on the biology. These are grounds for doing by tagma ANOVA.
+#PC1 explains 67.5% of the variance in dataset, and 0.738 adj r 2 for tagma separation (all sig different)
+
+
