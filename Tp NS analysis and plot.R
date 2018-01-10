@@ -33,12 +33,12 @@ pdf("TpNsJitterPlot.pdf", family="ArialMT")
 
 #plot the "jitter-ed"data, remove x axis so we can specify ticks later
 plot(TpNS$jAge, TpNS$jEN, bty="n", pch='°', xlab="Age post-hatching (hours)", 
-     ylab="Number of EN stripes", ylim=c(0,18), yaxt="n", xaxt="n")
+     ylab="Number of EN stripes", ylim=c(0,18), yaxt="n", xaxt="n", cex.lab=2, mgp=c(2.3,0.25,0))
 #add tick marks and axes
 ticks<-c(-1:18)
 ticksy<-seq(0, 18, 3)
-axis(1, at=ticks, labels=ticks, lwd=3, pos=0, cex.axis=0.75)
-axis(2, at=ticksy, labels=ticksy, lwd=3, pos=-0.8, cex.axis=0.75)
+axis(1, at=ticks, labels=ticks, lwd=3, pos=0, cex.axis=1.5)
+axis(2, at=ticksy, labels=ticksy, lwd=3, pos=-0.8, cex.axis=1.5)
 
 #add the linear regression line from the analysis, a line @4 hours to denote molt event, 
 # a line @ ~12 hours to indicate the T/G transition and a line @ ~15 hours to indicate G/A
@@ -47,7 +47,7 @@ abline(linreg, lwd=2)
 abline(v=4, lty=2)
 abline(v=12.3, lty=1)
 abline(v=15.2, lty=1)
-legend("top", bty="n", legend=expression(paste("R" ^"2","=0.974")))
+legend("top", bty="n", legend=expression(paste("R" ^"2","=0.974")), cex=2)
 
 #close plotting environment and send to pdf
 dev.off()
