@@ -76,7 +76,8 @@ ggnocell <- ggbiplot(myPCAnocell, obs.scale=1, var.scale=1, groups=group,
                      ellipse=TRUE, varname.size = 7.5, labels = NULL, labels.size = 10) +
   scale_color_discrete(name='')  +
   theme(legend.position= c(.85,.89), axis.text=element_text(size=20), 
-        axis.title=element_text(size=25), legend.text=element_text(size=20)) 
+        axis.title=element_text(size=25), legend.text=element_text(size=20),
+        axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
 ggnocell
 
 #look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
