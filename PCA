@@ -73,9 +73,9 @@ naoutnocell<- full[ , 18]
 group<-as.factor(naoutnocell)
 
 ggnocell <- ggbiplot(myPCAnocell, obs.scale=1, var.scale=1, groups=group, 
-                     ellipse=TRUE, varname.size = 7.5, labels = NULL, labels.size = 10) +
+                     ellipse=TRUE, varname.size = 5, labels = NULL, labels.size = 10) +
   scale_color_discrete(name='')  +
-  theme(legend.position= c(.85,.89), axis.text=element_text(size=20), 
+  theme(legend.position= c(.70,.95), axis.text=element_text(size=20), 
         axis.title=element_text(size=25), legend.text=element_text(size=20),
         axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
 ggnocell
@@ -93,5 +93,3 @@ summary( lm( myPCAnocell$x[,1] ~ group) )
 summary( lm( myPCAnocell$x[,2] ~ group) )
 
 #PC1 explains 67.5% of the variance in dataset, and 0.738 adj r 2 for tagma separation (all sig different)
-
-
