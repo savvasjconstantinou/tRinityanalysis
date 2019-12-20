@@ -61,7 +61,7 @@ cor(full[,7], full[,8], use="complete.obs")
 cor(full[,10], full[,11], use="complete.obs")
 
 #remove rows where NA are present, exclude dapi, AP oriented and %, pH3, tagma and all cell counts (b/c of high correlation)
-nocells<-na.omit(full[,c(1,3,5,7,9,10,12,13)])
+nocells<-na.omit(full[,c(1:3,5,7,9,10,12,13)])
 str(nocells)
 
 #do PCA, scale and center data. check contribution of each principal component.
@@ -69,34 +69,6 @@ myPCAnocellEN<-prcomp(nocells, scale=TRUE, center=TRUE)
 summary(myPCAnocellEN)
 #how important is each component to the PC (absolute value)
 myPCAnocellEN$rotation
-
-#test to see how well number of segments explains PC1
-#create a vector of the group names - en
-naoutnocellEN<- full[ , 2]
-
-group<-as.factor(naoutnocellEN)
-
-ggnocell <- ggbiplot(myPCAnocellEN, obs.scale=1, var.scale=1, groups=group, 
-                     ellipse=TRUE, varname.size = 5, labels = NULL, labels.size = 10) +
-  scale_color_discrete(name='')  +
-  theme(legend.position= c(.70,.95), axis.text=element_text(size=20), 
-        axis.title=element_text(size=25), legend.text=element_text(size=20),
-        axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
-ggnocell
-
-#look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
-#as necessary to explain 80-90% of variance- use summary of myPCA...)
-screeplot(myPCAnocellEN)
-
-#multiple comparisons of PC1, PC2, PC3, and PC4 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
-nocellaEN<-manova((myPCAnocellEN$x[,1:3])~group)
-summary(nocellaEN)
-
-#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
-summary( lm( myPCAnocellEN$x[,1] ~ group) )
-summary( lm( myPCAnocellEN$x[,2] ~ group) )
-
-#PC1 explains 64.3% of the variance in dataset, and 0.95 adj r 2 for axial position (number of segments) separation (all sig different)
 
 #test to see how tagma explains
 #create a vector of the group names- tagma
@@ -107,6 +79,32 @@ group1<-as.factor(naoutnocell)
 ggnocell <- ggbiplot(myPCAnocellEN, obs.scale=1, var.scale=1, groups=group1, 
                      ellipse=TRUE, varname.size = 5, labels = NULL, labels.size = 10) +
   scale_color_discrete(name='')  +
+  theme(legend.position= c(.60,.95), axis.text=element_text(size=20), 
+        axis.title=element_text(size=25), legend.text=element_text(size=15),
+        axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
+ggnocell
+
+#look at screeplot to determine how many PC to keep for future analysis (if <1 retain; but one should also retain as many PC
+#as necessary to explain 80-90% of variance- use summary of myPCA...)
+screeplot(myPCAnocellEN)
+
+#multiple comparisons of PC1, PC2, PC3 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+nocellaEN<-manova((myPCAnocellEN$x[,1:3])~group1)
+summary(nocellaEN)
+
+#how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
+summary( lm( myPCAnocellEN$x[,1] ~ group1) )
+summary( lm( myPCAnocellEN$x[,2] ~ group1) )
+
+#test to see how axial position as 4 groups explains
+#create a vector of the group names- axial position en 3-6= 1, 7-9= 2, 10-12= 3, 13-17=4, 4 total group
+naoutnocell1<- full[ , 19]
+
+group2<-as.factor(naoutnocell1)
+
+ggnocell <- ggbiplot(myPCAnocellEN, obs.scale=1, var.scale=1, groups=group2, 
+                     ellipse=TRUE, varname.size = 5, labels = NULL, labels.size = 10) +
+  scale_color_discrete(name='')  +
   theme(legend.position= c(.70,.95), axis.text=element_text(size=20), 
         axis.title=element_text(size=25), legend.text=element_text(size=20),
         axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
@@ -116,12 +114,10 @@ ggnocell
 #as necessary to explain 80-90% of variance- use summary of myPCA...)
 screeplot(myPCAnocellEN)
 
-#multiple comparisons of PC1, PC2, PC3, and PC4 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
-nocellaEN<-manova((myPCAnocellEN$x[,1:3])~group1)
+#multiple comparisons of PC1, PC2, PC3 (to explain >90% variance) by group. If sig p-value in Anova (Type II), than the groups are not the same
+nocellaEN<-manova((myPCAnocellEN$x[,1:3])~group2)
 summary(nocellaEN)
 
 #how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
-summary( lm( myPCAnocellEN$x[,1] ~ group1) )
-summary( lm( myPCAnocellEN$x[,2] ~ group1) )
-
-#PC1 explains 64.3% of the variance in dataset, and 0.70 adj r 2 for tagma separation (all sig different)
+summary( lm( myPCAnocellEN$x[,1] ~ group2) )
+summary( lm( myPCAnocellEN$x[,2] ~ group2) )
