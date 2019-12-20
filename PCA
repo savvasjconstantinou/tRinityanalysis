@@ -44,7 +44,7 @@ full<-do.call(rbind, lapply(filename, function(x) read.csv(x, col.names = colnam
 write.csv(full, file="full.csv")
 
 #researchers who want to replcate the analysis can start here using the full data set which is provided
-#test to see if axial position "en" better explains PC1 than tagma
+#test to see if axial position better explains PC1 than tagma
 
 #add tagma groupings (see methods for categories), remove column 1 (duplicate of row names), remove "*" on data
 full<-read.csv("C:/Users/Savvas Constantinou/Documents/exported csv data for SC/raw data for full2/full.csv", header=T, stringsAsFactors =F)
@@ -60,8 +60,8 @@ cor(full[,5], full[,6], use="complete.obs")
 cor(full[,7], full[,8], use="complete.obs")
 cor(full[,10], full[,11], use="complete.obs")
 
-#remove rows where NA are present, exclude dapi, AP oriented and %, pH3, tagma and all cell counts (b/c of high correlation)
-nocells<-na.omit(full[,c(1:3,5,7,9,10,12,13)])
+#remove rows where NA are present, exclude dapi, en, AP oriented and %, pH3, tagma and all cell counts (b/c of high correlation)
+nocells<-na.omit(full[,c(1,3,5,7,9,10,12,13)])
 str(nocells)
 
 #do PCA, scale and center data. check contribution of each principal component.
@@ -97,7 +97,7 @@ summary( lm( myPCAnocellEN$x[,1] ~ group1) )
 summary( lm( myPCAnocellEN$x[,2] ~ group1) )
 
 #test to see how axial position as 4 groups explains
-#create a vector of the group names- axial position en 3-6= 1, 7-9= 2, 10-12= 3, 13-17=4, 4 total group
+#create a vector of the group names- axial position 4 total group- see data for group designation- determined- sequential segment number with ~100 individuals per group and all individuals with the same segment number are kept together 
 naoutnocell1<- full[ , 19]
 
 group2<-as.factor(naoutnocell1)
