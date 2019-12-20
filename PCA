@@ -96,16 +96,16 @@ summary(nocellaEN)
 summary( lm( myPCAnocellEN$x[,1] ~ group1) )
 summary( lm( myPCAnocellEN$x[,2] ~ group1) )
 
-#test to see how axial position as 4 groups explains
-#create a vector of the group names- axial position 4 total group- see data for group designation- determined- sequential segment number with ~100 individuals per group and all individuals with the same segment number are kept together 
-naoutnocell1<- full[ , 19]
+#test to see how axial position as segment number explains
+#create a vector of the group names- use # segments
+naoutnocell1<- full[ , 2]
 
 group2<-as.factor(naoutnocell1)
 
 ggnocell <- ggbiplot(myPCAnocellEN, obs.scale=1, var.scale=1, groups=group2, 
                      ellipse=TRUE, varname.size = 5, labels = NULL, labels.size = 10) +
   scale_color_discrete(name='')  +
-  theme(legend.position= c(.70,.95), axis.text=element_text(size=20), 
+  theme(legend.position= c(.8,.95), axis.text=element_text(size=20), 
         axis.title=element_text(size=25), legend.text=element_text(size=20),
         axis.line.x=element_line(size = 1.5), axis.line.y=element_line(size = 1.5))
 ggnocell
@@ -121,3 +121,4 @@ summary(nocellaEN)
 #how much of the variance of a PC is explained by group? How dissimilar are the groups from each other in the dimension of a PC?
 summary( lm( myPCAnocellEN$x[,1] ~ group2) )
 summary( lm( myPCAnocellEN$x[,2] ~ group2) )
+
