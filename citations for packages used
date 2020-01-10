@@ -1,0 +1,23 @@
+We had some issues with the citation format of these R packages in our manuscript which has been accepted Jan 2020 in Evo Devo.
+
+I wanted to make sure that the creators of the packages got credit for their work in helping a new R user like me with these analysis.
+
+Ahlmann-Eltze C. Significance Brackets for 'ggplot2'. R package version 0.4.0. 2017; Available at: https://cran.r-project.org/web/packages/ggsignif/index.html
+
+Auguie B. gridExtra: Miscellaneous Functions for "Grid" Graphics. R package version 2.2.1. Available at 2016: https://CRAN.R-project.org/package=gridExtra
+
+Chang W. Extrafont: tools for using fonts. R package version 0.17. Available at 2014: https://cran.r-project.org/web/packages/extrafont/index.html
+
+Dowle M, Srinivasan A. data.table: extension of ‘data.frame’. R package version 1.10.4; 2017. https://CRAN.R-project.org/package=data.table 
+
+Harrell FE. With contributions from Charles Dupont and many others. Hmisc: Harrell Miscellaneous. R package version 4.0-2; 2016. https://CRAN.R-project.org/package=Hmisc 
+
+Robinson D. Convert statistical analysis objects into tidy data frames. R package broom version 0.4.2; 2017. https://cran.r-project.org/web/packages/broom/index.html
+
+Vu QV. ggbiplot: A ggplot2 based biplot. R package version 0.55; 2011. http://github.com/vqv/ggbiplot
+
+Wickham H. ggplot2: elegant graphics for data analysis. New York: Springer-Verlag; 2009. 
+
+Wickham H, Chang W. Devtools: tools to make developing R packages easier. R package version 1.12.0; 2016. https://CRAN.R-project.org/package=devtools
+
+Wilke C. Streamlined plot theme and plot annotations for ‘ggplot2’. R package cowplot version 0.8.0.; 2017. https://cran.r-project.org/web/packages/cowplot/index.html
